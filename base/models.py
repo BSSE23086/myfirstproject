@@ -23,8 +23,7 @@ class Room(models.Model):
     host =   models.ForeignKey(User, on_delete = models.SET_NULL, null=True)
     topic =  models.ForeignKey(Topic, on_delete = models.SET_NULL, null=True)# allow it to be empty
     name = models.CharField(max_length=200)
-# Make sure it matches this EXACTLY:
-    participants = models.ManyToManyField(User, related_name='participants', blank=True)
+    participants = models.ManyToManyField(User, related_name='rooms_joined', blank=True)
     description = models.TextField(null = True, blank = True)
     GENDER_CHOICES = [
         ('Male', 'Male'),
