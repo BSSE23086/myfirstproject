@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-n&pb*!fxc21y(gw&y99gqm&#)lcadnjso(8cy7v(lf=)2fhxzw
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'tehreemmazhar22.pythonanywhere.com', '*']
-# Application definition
 
 INSTALLED_APPS = [
     'rest_framework',
@@ -130,3 +129,6 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+
+import pathlib
+STATIC_ROOT = BASE_DIR / 'staticfiles'
