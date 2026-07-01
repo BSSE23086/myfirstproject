@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 def loginPage(request):
     page = 'login'
@@ -19,9 +20,11 @@ def loginPage(request):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, 'User does not exist.')
-            return render(request, 'base/login_register.html', {})
+            return render(request, 'base/login_register.html', {'page': 'login'})
 
-        user = authenticate(request, email=email, password=password)
+        # FIXED: Pass email to the username parameter
+        user = authenticate(request, username=email, password=password)
+        
         if user is not None:
             login(request, user)
             return redirect('home')
@@ -46,11 +49,12 @@ def registerPage(request):
             login(request, user)
             return redirect('home')
         else: 
-            # Passing form validation details straight to the frontend template messages
             for error in form.errors.values():
                 messages.error(request, error)
 
-    return render(request, 'base/login_register.html', {'form': form})
+    # Add 'page': 'register' to the context!
+    context = {'form': form, 'page': 'register'} 
+    return render(request, 'base/login_register.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -131,7 +135,7 @@ def updateRoom(request, pk):
 
 @login_required(login_url='login')
 def deleteRoom(request, pk):
-    room = Room.objects.get(id=pk)
+    room = get_object_or_404(Room, id=pk)
     if request.user != room.host:
         return HttpResponse('You are not the genuine user!!! ')
     if request.method == 'POST':
@@ -141,7 +145,7 @@ def deleteRoom(request, pk):
 
 @login_required(login_url='login')
 def deleteMessage(request, pk):
-    message = Message.objects.get(id=pk)
+    message = get_object_or_404(Message, id=pk)
     if request.user != message.user:
         return HttpResponse('You are not the genuine user!!! ')
     if request.method == 'POST':
@@ -168,6 +172,6 @@ def topicsPage(request):
     return render(request, 'base/topic.html', {'topics': topics})
 
 
-def activityPage(request):
-    room_messages = Messages.objects.all()
+def activityPage(request):  
+    room_messages = Message.objects.all()
     return render(request, 'base/activity.html', {'room_messages': room_messages})

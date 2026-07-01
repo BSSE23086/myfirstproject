@@ -15,14 +15,14 @@
 
         <form class="form" action="" method="POST">
           {% csrf_token %}
-          
-          <!-- FIX: Dynamic fields with proper matching label tags -->
-          {% for field in form %}
           <div class="form__group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
+            <label for="username">Email</label>
+            <input id="username" name="email" type="text" placeholder="e.g. dennis_ivy" />
           </div>
-          {% endfor %}
+          <div class="form__group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+          </div>
 
           <button class="btn btn--main" type="submit">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -55,14 +55,17 @@
 
         <form class="form" action="" method="POST">
           {% csrf_token %}
+          
+          {% for field in form %}
           <div class="form__group">
-            <label for="username">Email</label>
-            <input id="username" name="email" type="text" placeholder="e.g. dennis_ivy" />
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            
+            {% for error in field.errors %}
+                <p style="color: #ff4d4d; font-size: 13px; margin-top: 4px; margin-bottom: 0;">{{ error }}</p>
+            {% endfor %}
           </div>
-          <div class="form__group">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
-          </div>
+          {% endfor %}
 
           <button class="btn btn--main" type="submit">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -76,7 +79,7 @@
 
         <div class="auth__action">
           <p>Already signed up?</p>
-          <a href="{% url 'login' %}" class="btn btn--link">Login</a> <!-- FIX: Changed target text link from Sign Up to Login -->
+          <a href="{% url 'login' %}" class="btn btn--link">Login</a>
         </div>
       </div>
     </div>
